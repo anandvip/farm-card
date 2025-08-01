@@ -560,32 +560,246 @@
     <script>
         let translationTimeouts = {};
         
-        // Auto-translation functionality
+        // Smart Hindi Translation Dictionary
+        const hindiTranslations = {
+            // Farm Names
+            'anand': 'आनंद',
+            'agro': 'एग्रो',
+            'farms': 'फार्म्स',
+            'farm': 'फार्म',
+            'krishna': 'कृष्णा',
+            'ram': 'राम',
+            'shyam': 'श्याम',
+            'kumar': 'कुमार',
+            'singh': 'सिंह',
+            'sharma': 'शर्मा',
+            'gupta': 'गुप्ता',
+            'verma': 'वर्मा',
+            'yadav': 'यादव',
+            'patel': 'पटेल',
+            
+            // Places
+            'delhi': 'दिल्ली',
+            'mumbai': 'मुंबई',
+            'pune': 'पुणे',
+            'bangalore': 'बेंगलुरु',
+            'hyderabad': 'हैदराबाद',
+            'chennai': 'चेन्नई',
+            'kolkata': 'कोलकाता',
+            'ahmedabad': 'अहमदाबाद',
+            'jaipur': 'जयपुर',
+            'lucknow': 'लखनऊ',
+            'kanpur': 'कानपुर',
+            'nagpur': 'नागपुर',
+            'indore': 'इंदौर',
+            'bhopal': 'भोपाल',
+            'visakhapatnam': 'विशाखापत्तनम',
+            'patna': 'पटना',
+            'vadodara': 'वडोदरा',
+            'ghaziabad': 'गाजियाबाद',
+            'ludhiana': 'लुधियाना',
+            'agra': 'आगरा',
+            'nashik': 'नाशिक',
+            'faridabad': 'फरीदाबाद',
+            'meerut': 'मेरठ',
+            'rajkot': 'राजकोट',
+            'kalyan': 'कल्याण',
+            'vasai': 'वसई',
+            'varanasi': 'वाराणसी',
+            'srinagar': 'श्रीनगर',
+            'aurangabad': 'औरंगाबाद',
+            'dhanbad': 'धनबाद',
+            'amritsar': 'अमृतसर',
+            'navi mumbai': 'नवी मुंबई',
+            'allahabad': 'इलाहाबाद',
+            'ranchi': 'रांची',
+            'howrah': 'हावड़ा',
+            'coimbatore': 'कोयंबटूर',
+            'jabalpur': 'जबलपुर',
+            'gwalior': 'ग्वालियर',
+            'vijayawada': 'विजयवाड़ा',
+            'jodhpur': 'जोधपुर',
+            'madurai': 'मदुरै',
+            'raipur': 'रायपुर',
+            'kota': 'कोटा',
+            'chandigarh': 'चंडीगढ़',
+            'gurgaon': 'गुड़गांव',
+            'noida': 'नोएडा',
+            'greater noida': 'ग्रेटर नोएडा',
+            
+            // States
+            'punjab': 'पंजाब',
+            'haryana': 'हरियाणा',
+            'uttar pradesh': 'उत्तर प्रदेश',
+            'bihar': 'बिहार',
+            'west bengal': 'पश्चिम बंगाल',
+            'maharashtra': 'महाराष्ट्र',
+            'gujarat': 'गुजरात',
+            'rajasthan': 'राजस्थान',
+            'madhya pradesh': 'मध्य प्रदेश',
+            'karnataka': 'कर्नाटक',
+            'andhra pradesh': 'आंध्र प्रदेश',
+            'telangana': 'तेलंगाना',
+            'tamil nadu': 'तमिल नाडु',
+            'kerala': 'केरल',
+            'odisha': 'ओडिशा',
+            'jharkhand': 'झारखंड',
+            'chhattisgarh': 'छत्तीसगढ़',
+            'assam': 'असम',
+            'himachal pradesh': 'हिमाचल प्रदेश',
+            'uttarakhand': 'उत्तराखंड',
+            'jammu kashmir': 'जम्मू कश्मीर',
+            'goa': 'गोवा',
+            'manipur': 'मणिपुर',
+            'meghalaya': 'मेघालय',
+            'tripura': 'त्रिपुरा',
+            'mizoram': 'मिजोरम',
+            'arunachal pradesh': 'अरुणाचल प्रदेश',
+            'nagaland': 'नागालैंड',
+            'sikkim': 'सिक्किम',
+            
+            // Crops
+            'wheat': 'गेहूं',
+            'rice': 'चावल',
+            'maize': 'मक्का',
+            'sugarcane': 'गन्ना',
+            'cotton': 'कपास',
+            'barley': 'जौ',
+            'millet': 'बाजरा',
+            'sorghum': 'ज्वार',
+            'mustard': 'सरसों',
+            'groundnut': 'मूंगफली',
+            'soybean': 'सोयाबीन',
+            'sunflower': 'सूरजमुखी',
+            'potato': 'आलू',
+            'onion': 'प्याज',
+            'tomato': 'टमाटर',
+            'cabbage': 'पत्तागोभी',
+            'cauliflower': 'फूलगोभी',
+            'carrot': 'गाजर',
+            'peas': 'मटर',
+            'beans': 'बीन्स',
+            'chili': 'मिर्च',
+            'turmeric': 'हल्दी',
+            'ginger': 'अदरक',
+            'garlic': 'लहसुन',
+            'coriander': 'धनिया',
+            'cumin': 'जीरा',
+            'fenugreek': 'मेथी',
+            'spinach': 'पालक',
+            'okra': 'भिंडी',
+            'eggplant': 'बैंगन',
+            'bitter gourd': 'करेला',
+            'bottle gourd': 'लौकी',
+            'ridge gourd': 'तोरी',
+            'cucumber': 'खीरा',
+            'watermelon': 'तरबूज',
+            'muskmelon': 'खरबूजा',
+            'papaya': 'पपीता',
+            'mango': 'आम',
+            'guava': 'अमरूद',
+            'pomegranate': 'अनार',
+            'banana': 'केला',
+            'grapes': 'अंगूर',
+            'orange': 'संतरा',
+            'lemon': 'नींबू',
+            'apple': 'सेब',
+            
+            // Common Names
+            'satpal': 'सतपाल',
+            'ravi': 'रवि',
+            'suresh': 'सुरेश',
+            'rajesh': 'राजेश',
+            'mahesh': 'महेश',
+            'dinesh': 'दिनेश',
+            'naresh': 'नरेश',
+            'ramesh': 'रमेश',
+            'mukesh': 'मुकेश',
+            'prakash': 'प्रकाश',
+            'vikash': 'विकास',
+            'ashok': 'अशोक',
+            'deepak': 'दीपक',
+            'anil': 'अनिल',
+            'sunil': 'सुनिल',
+            'vinod': 'विनोद',
+            'manoj': 'मनोज',
+            'sanjay': 'संजय',
+            'ajay': 'अजय',
+            'vijay': 'विजय',
+            'raj': 'राज',
+            'mohan': 'मोहन',
+            'sohan': 'सोहन',
+            'gopal': 'गोपाल',
+            'kishan': 'किशन',
+            'lal': 'लाल',
+            'das': 'दास',
+            'chand': 'चंद',
+            'pal': 'पाल',
+            'dev': 'देव',
+            'nath': 'नाथ',
+            'devi': 'देवी',
+            'kumari': 'कुमारी',
+            'bai': 'बाई',
+            'mata': 'माता'
+        };
+        
+        // Smart translation function
         async function translateToHindi(text) {
             if (!text || text.trim() === '') return '';
             
-            try {
-                const response = await fetch("https://api.anthropic.com/v1/messages", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        model: "claude-sonnet-4-20250514",
-                        max_tokens: 100,
-                        messages: [{
-                            role: "user",
-                            content: `Translate this to Hindi accurately: "${text}". Respond only with the Hindi translation, no explanations.`
-                        }]
-                    })
-                });
+            const words = text.toLowerCase().trim().split(/\s+/);
+            const translatedWords = [];
+            
+            for (let word of words) {
+                // Remove punctuation for matching
+                const cleanWord = word.replace(/[^\w\s]/g, '');
                 
-                const data = await response.json();
-                return data.content[0].text.trim();
-            } catch (error) {
-                console.error('Translation error:', error);
-                return '';
+                if (hindiTranslations[cleanWord]) {
+                    translatedWords.push(hindiTranslations[cleanWord]);
+                } else {
+                    // If no direct translation, try partial matches for compound words
+                    let foundTranslation = false;
+                    for (let [eng, hindi] of Object.entries(hindiTranslations)) {
+                        if (cleanWord.includes(eng) || eng.includes(cleanWord)) {
+                            translatedWords.push(hindi);
+                            foundTranslation = true;
+                            break;
+                        }
+                    }
+                    if (!foundTranslation) {
+                        // Keep original word in Devanagari script attempt
+                        translatedWords.push(transliterateToDevanagari(cleanWord));
+                    }
+                }
             }
+            
+            return translatedWords.join(' ');
+        }
+        
+        // Basic transliteration for unknown words
+        function transliterateToDevanagari(word) {
+            const transliterationMap = {
+                'a': 'अ', 'aa': 'आ', 'i': 'इ', 'ii': 'ई', 'u': 'उ', 'uu': 'ऊ',
+                'e': 'ए', 'ai': 'ऐ', 'o': 'ओ', 'au': 'औ',
+                'ka': 'क', 'kha': 'ख', 'ga': 'ग', 'gha': 'घ', 'nga': 'ङ',
+                'cha': 'च', 'chha': 'छ', 'ja': 'ज', 'jha': 'झ', 'nya': 'ञ',
+                'ta': 'त', 'tha': 'थ', 'da': 'द', 'dha': 'ध', 'na': 'न',
+                'pa': 'प', 'pha': 'फ', 'ba': 'ब', 'bha': 'भ', 'ma': 'म',
+                'ya': 'य', 'ra': 'र', 'la': 'ल', 'va': 'व',
+                'sha': 'श', 'shha': 'ष', 'sa': 'स', 'ha': 'ह',
+                'k': 'क्', 'g': 'ग्', 'j': 'ज्', 't': 'त्', 'd': 'द्',
+                'n': 'न्', 'p': 'प्', 'b': 'ब्', 'm': 'म्',
+                'y': 'य्', 'r': 'र्', 'l': 'ल्', 'v': 'व्',
+                's': 'स्', 'h': 'ह्'
+            };
+            
+            // Simple approximation - in real implementation, you'd want more sophisticated transliteration
+            let result = '';
+            for (let i = 0; i < word.length; i++) {
+                const char = word[i].toLowerCase();
+                result += transliterationMap[char] || char;
+            }
+            return result || word; // Fallback to original if transliteration fails
         }
         
         // Manual translation for specific fields
